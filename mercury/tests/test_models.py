@@ -7,6 +7,7 @@ from mercury.models import (
     SuspensionSensor,
     FuelLevelSensor,
     EventCodeAccess,
+    WindSpeedSensor,
 )
 
 # Test value constants that should all work
@@ -16,6 +17,7 @@ TEST_WHEEL_SPEED_FR = 30
 TEST_SUSPENSION_FR = 2
 TEST_FUEL = 6
 TEST_EVENT_CODE = "abcdefgh"
+TEST_WIND = 15
 
 
 def create_simulated_data_objects():
@@ -35,6 +37,9 @@ def create_simulated_data_objects():
         current_fuel_level=TEST_FUEL, created_at=datetime.datetime.now()
     )
     EventCodeAccess.objects.create(event_code=TEST_EVENT_CODE, enabled=False)
+    WindSpeedSensor.objects.create(
+        current_wind_speed=TEST_WIND, created_at=datetime.datetime.now()
+    )
 
 
 class TestSensorModels(TestCase):
@@ -64,3 +69,7 @@ class TestSensorModels(TestCase):
     def test_event_code_access(self):
         foo = EventCodeAccess.objects.get(event_code=TEST_EVENT_CODE, enabled=False)
         self.assertEqual(TEST_EVENT_CODE, foo.event_code)
+
+    def test_wind_speed(self):
+        foo = WindSpeedSensor.objects.get(current_wind_speed=TEST_WIND)
+        self.assertEqual(foo.current_wind_speed, TEST_WIND)
